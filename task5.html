@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Weather App - India</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #4facfe, #00f2fe);
+      color: #fff;
+      text-align: center;
+      padding: 50px;
+    }
+    .weather-box {
+      background: rgba(0, 0, 0, 0.5);
+      padding: 30px;
+      border-radius: 15px;
+      display: inline-block;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+    input, button {
+      padding: 10px;
+      margin: 10px;
+      border-radius: 8px;
+      border: none;
+    }
+    button {
+      cursor: pointer;
+      background: #ff9800;
+      color: white;
+      font-weight: bold;
+    }
+    img {
+      width: 64px;
+      height: 64px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🌦 Weather App - India</h1>
+  <div class="weather-box">
+    <input type="text" id="city" placeholder="Enter city (e.g., Mumbai)">
+    <button onclick="getWeather()">Get Weather</button>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    const apiKey = "f5cfb9d49d4649f2972162525253008"; // your key
+
+    async function getWeather() {
+      const city = document.getElementById("city").value || "Mumbai"; // default Mumbai
+      const url = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${city},India&aqi=no`;
+
+      try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error("City not found");
+        const data = await response.json();
+
+        document.getElementById("result").innerHTML = `
+          <h2>${data.location.name}, ${data.location.region}</h2>
+          <p><strong>Temperature:</strong> ${data.current.temp_c}°C</p>
+          <p><strong>Condition:</strong> ${data.current.condition.text}</p>
+          <img src="https:${data.current.condition.icon}" alt="Weather Icon">
+          <p><strong>Humidity:</strong> ${data.current.humidity}%</p>
+          <p><strong>Wind:</strong> ${data.current.wind_kph} kph</p>
+          <p><strong>Local Time:</strong> ${data.location.localtime}</p>
+        `;
+      } catch (error) {
+        document.getElementById("result").innerHTML = `<p style="color:red;">❌ ${error.message}</p>`;
+      }
+    }
+  </script>
+</body>
+</html>
